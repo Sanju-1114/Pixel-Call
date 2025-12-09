@@ -1,6 +1,6 @@
-let IS_PROD = false;
+let IS_PROD = true;
 const server = IS_PROD ?
-    "https://pixel-call-backend.vercel.app/" :
+    "https://pixel-call-backend.onrender.com" :
 
     "http://localhost:8000"
 
