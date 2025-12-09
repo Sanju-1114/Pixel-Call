@@ -28,7 +28,7 @@ The application utilizes **WebRTC** for peer-to-peer media streaming and **Socke
 ##  Features
 
 - **Real-time Video & Audio:** High-quality, low-latency streaming using WebRTC mesh topology.
-- **Fully Responsive:** Adaptive layout that works on Desktops, Tablets, and Mobile phones (Google Meet style grid).
+- **Fully Responsive:** Adaptive layout that works on Desktops, Tablets, and Mobile phones.
 - **Screen Sharing:** Share your entire screen or specific windows with other participants.
 - **In-Call Chat:** Real-time messaging with distinct styles for sender and receiver.
 - **Media Controls:** Mute/Unmute audio and Toggle Video On/Off.
