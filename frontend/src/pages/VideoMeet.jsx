@@ -425,15 +425,15 @@ export default function VideoMeetComponent() {
 
                     {/* Controls */}
                     <div className={styles.buttonContainers}>
-                        <IconButton onClick={handleVideo} style={{ color: !video ? "red" : "white", backgroundColor: !video ? "#3c4043" : "transparent" }}>
+                        <IconButton onClick={handleVideo} style={{ color: !video ? "red" : "white", backgroundColor: !video ? "#ff0000ff" : "transparent" }}>
                             {video ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
                         
-                        <IconButton onClick={handleAudio} style={{ color: !audio ? "red" : "white", backgroundColor: !audio ? "#3c4043" : "transparent" }}>
+                        <IconButton onClick={handleAudio} style={{ color: !audio ? "red" : "white", backgroundColor: !audio ? "#ff0000ff" : "transparent" }}>
                             {audio ? <MicIcon /> : <MicOffIcon />}
                         </IconButton>
 
-                        <IconButton onClick={handleEndCall} style={{ color: "red", backgroundColor: "#3c4043" }}>
+                        <IconButton onClick={handleEndCall} style={{ color: "red", backgroundColor: "#f40808ff" }}>
                             <CallEndIcon />
                         </IconButton>
 
