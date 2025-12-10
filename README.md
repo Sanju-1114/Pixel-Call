@@ -66,7 +66,7 @@ Follow these steps to run the project locally.
 
 ### Prerequisites
 * [Node.js](https://nodejs.org/) (v14 or higher)
-* `npm` or `yarn`
+* `npm`
 
 ### 1. Clone the Repository
 ```bash
