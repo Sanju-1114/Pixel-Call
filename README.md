@@ -70,7 +70,7 @@ Follow these steps to run the project locally.
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/Sanju-1114/Pixel-Call.git](https://github.com/Sanju-1114/Pixel-Call.git)
+git clone https://github.com/Sanju-1114/Pixel-Call.git
 cd Pixel-Call
 ```
 
