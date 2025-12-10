@@ -88,7 +88,6 @@ Open a new terminal and navigate to the client directory:
 ```bash
 cd frontend
 npm install
-npm run start
 ```
 
 ### 4. Configuration (Crucial for Mobile/LAN testing)
