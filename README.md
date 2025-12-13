@@ -65,7 +65,7 @@ The application utilizes **WebRTC** for peer-to-peer media streaming and **Socke
 Follow these steps to run the project locally.
 
 ### Prerequisites
-* [Node.js](https://nodejs.org/)
+* `Node.js`
 * `npm`
 
 ### 1. Clone the Repository
