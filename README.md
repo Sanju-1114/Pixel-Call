@@ -131,6 +131,6 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 <div align="center">
 
-**Created by [Sanju](https://github.com/Sanju-1114)**
+**Created by [Sanjeev](https://github.com/Sanju-1114)**
 
 </div>
