@@ -1,6 +1,6 @@
 import axios from "axios";
 import httpStatus from "http-status";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import server from "../environment";
 
@@ -14,10 +14,9 @@ const client = axios.create({
 
 export const AuthProvider = ({ children }) => {
 
-    const authContext = useContext(AuthContext);
-
-
-    const [userData, setUserData] = useState(authContext);
+    // const authContext = useContext(AuthContext);
+    // const [userData, setUserData] = useState(authContext); 
+    const [userData, setUserData] = useState(null);
 
 
     const router = useNavigate();
@@ -46,11 +45,12 @@ export const AuthProvider = ({ children }) => {
                 password: password
             });
 
-            console.log(username, password)
-            console.log(request.data)
+            // console.log(username, password)
+            // console.log(request.data)
 
             if (request.status === httpStatus.OK) {
                 localStorage.setItem("token", request.data.token);
+                // setUserData(request.data.user);
                 router("/home")
             }
         } catch (err) {
@@ -72,22 +72,54 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+
+    // const addToUserHistory = async (meetingCode) => {
+    //     try {
+    //         let request = await client.post("/add_to_activity", {
+    //             token: localStorage.getItem("token"),
+    //             meeting_code: meetingCode
+    //         });
+    //         return request
+    //     } catch (e) {
+    //         throw e;
+    //     }
+    // }
+
     const addToUserHistory = async (meetingCode) => {
         try {
-            let request = await client.post("/add_to_activity", {
-                token: localStorage.getItem("token"),
-                meeting_code: meetingCode
-            });
-            return request
+            // 2. Optimization: Fire and Forget (Optional)
+            // We return the promise so the UI *can* wait if it wants to,
+            // but usually, for analytics/history, you don't want to block the user.
+            const token = localStorage.getItem("token");
+            
+            // Only make the call if we have a token
+            if(token) {
+                return await client.post("/add_to_activity", {
+                    token: token,
+                    meeting_code: meetingCode
+                });
+            }
         } catch (e) {
-            throw e;
+            // Silently fail for history logs so it doesn't crash the app
+            console.error("Failed to log history", e);
         }
-    }
+    };
 
 
-    const data = {
-        userData, setUserData, addToUserHistory, getHistoryOfUser, handleRegister, handleLogin
-    }
+    // const data = {
+    //     userData, setUserData, addToUserHistory, getHistoryOfUser, handleRegister, handleLogin
+    // }
+    // 3. PERFORMANCE FIX: useMemo
+    // This ensures 'data' reference only changes when 'userData' changes.
+    // This prevents unnecessary re-renders of the entire app tree.
+    const data = useMemo(() => ({
+        userData,
+        setUserData,
+        addToUserHistory,
+        getHistoryOfUser,
+        handleRegister,
+        handleLogin
+    }), [userData]); // Dependencies
 
     return (
         <AuthContext.Provider value={data}>

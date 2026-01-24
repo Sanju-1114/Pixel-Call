@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 import { Badge, IconButton, TextField, Button } from "@mui/material";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
@@ -40,7 +41,8 @@ const VideoPlayer = ({ stream }) => {
 };
 
 export default function VideoMeetComponent() {
-    
+    const navigate = useNavigate();
+
     // --- Refs ---
     const socketRef = useRef();
     const socketIdRef = useRef();
@@ -354,10 +356,24 @@ export default function VideoMeetComponent() {
 
     const handleEndCall = () => {
         try {
-            if(localStreamRef.current) localStreamRef.current.getTracks().forEach(t => t.stop());
-            if(socketRef.current) socketRef.current.disconnect();
-        } catch (e) { }
-        window.location.href = "/";
+            if(localStreamRef.current) {
+                localStreamRef.current.getTracks().forEach(track => track.stop());
+            }
+            if(socketRef.current) {
+                socketRef.current.disconnect();
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // --- SMART REDIRECT FIX ---
+        if (localStorage.getItem("token")) {
+            // User is Logged In -> Go to Dashboard
+            navigate("/home");
+        } else {
+            // User is Guest -> Go to Landing Page
+            navigate("/");
+        }
     };
 
     const sendMessage = () => {

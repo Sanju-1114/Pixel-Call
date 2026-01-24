@@ -1,173 +1,201 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Box,
+  Avatar,
+  Snackbar,
+  ThemeProvider,
+  createTheme,
+  CircularProgress // IMPORT SPINNER
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { AuthContext } from "../contexts/AuthContext";
-import { Snackbar } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom"; // IMPORT NAVIGATE
+import server from "../environment"; 
+import "../App.css"; 
 
 const defaultTheme = createTheme();
 
-export default function Authentication() {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [error, setError] = React.useState("");
-  const [message, setMessage] = React.useState("");
+export default function Authentication({ open, handleClose }) {
+  const navigate = useNavigate(); // HOOK FOR FAST NAVIGATION
 
-  const [formState, setFormState] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
+  const [formState, setFormState] = useState(0);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  
+  // NEW: LOADING STATE
+  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { handleRegister, handleLogin } = React.useContext(AuthContext);
+  const API_URL = `${server}/api/v1/users`; 
 
-  let handleAuth = async () => {
+  const handleAuth = async () => {
     try {
+      setLoading(true); // START LOADING
+      setError("");
+
       if (formState === 0) {
-        // Login Logic
-        await handleLogin(username, password);
-      }
-      if (formState === 1) {
-        // Register Logic
-        let result = await handleRegister(name, username, password);
-        setUsername("");
-        setMessage(result);
-        setOpen(true);
-        setError("");
+        // --- LOGIN ---
+        const response = await axios.post(`${API_URL}/login`, {
+          username,
+          password
+        });
+        localStorage.setItem("token", response.data.token);
+        
+        handleClose();
+        
+        // SPEED FIX: Use navigate instead of window.location
+        navigate("/home"); 
+      } else {
+        // --- REGISTER ---
+        const response = await axios.post(`${API_URL}/register`, {
+          name,
+          username,
+          password
+        });
+        setMessage(response.data.message || "Registration Successful!");
+        setSnackbarOpen(true);
         setFormState(0);
+        setError("");
         setPassword("");
       }
     } catch (err) {
-      console.log("AUTH ERROR:", err);
-      
-      // --- FIX STARTS HERE ---
-      // Safely access error message. If server is down, provide a fallback string.
-      let errMsg = (err.response && err.response.data && err.response.data.message) 
-        ? err.response.data.message 
-        : "Connection failed. Please check your Server IP and Network.";
-      
+      console.error("Auth Error:", err);
+      const errMsg = err.response?.data?.message || "Something went wrong. Check network.";
       setError(errMsg);
-      // --- FIX ENDS HERE ---
+    } finally {
+      setLoading(false); // STOP LOADING
     }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="xs"
+        fullWidth
+        slotProps={{
+            backdrop: {
+                sx: {
+                    backdropFilter: "blur(5px)", 
+                    backgroundColor: "rgba(0, 0, 0, 0.4)", 
+                },
+            },
+        }}
+        PaperProps={{
+          sx: {
+            backgroundColor: "rgba(255, 255, 255, 0.15)", 
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            borderRadius: "16px",
+            boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+            color: "white", 
+          },
+        }}
+      >
+        <IconButton
+          onClick={handleClose}
+          sx={{ position: "absolute", right: 8, top: 8, color: "white" }}
+        >
+          <CloseIcon />
+        </IconButton>
+
+        <DialogContent sx={{ pt: 4, pb: 4 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            
+            <Avatar sx={{ m: 1, bgcolor: "#1976d2" }}>
               <LockOutlinedIcon />
             </Avatar>
 
-            <div>
+            <Box sx={{ mb: 2 }}>
               <Button
-                variant={formState === 0 ? "contained" : "outlined"}
-                onClick={() => {
-                  setFormState(0);
-                  setError("");
-                }}
-                sx={{ mr: 1 }}
+                onClick={() => { setFormState(0); setError(""); }}
+                sx={{ color: formState === 0 ? "white" : "#b0bec5", fontWeight: "bold" }}
               >
                 Sign In
               </Button>
               <Button
-                variant={formState === 1 ? "contained" : "outlined"}
-                onClick={() => {
-                  setFormState(1);
-                  setError("");
-                }}
+                onClick={() => { setFormState(1); setError(""); }}
+                sx={{ color: formState === 1 ? "white" : "#b0bec5", fontWeight: "bold" }}
               >
                 Sign Up
               </Button>
-            </div>
+            </Box>
 
-            <Box component="form" noValidate sx={{ mt: 1 }}>
-              {formState === 1 ? (
+            <Box component="form" noValidate sx={{ width: "100%" }}>
+              {formState === 1 && (
                 <TextField
+                  className="authInput"
                   margin="normal"
                   required
                   fullWidth
-                  id="name"
                   label="Full Name"
-                  name="name"
                   value={name}
-                  autoFocus
                   onChange={(e) => setName(e.target.value)}
                 />
-              ) : (
-                <></>
               )}
 
               <TextField
+                className="authInput"
                 margin="normal"
                 required
                 fullWidth
-                id="username"
                 label="Username"
-                name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
+
               <TextField
+                className="authInput"
                 margin="normal"
                 required
                 fullWidth
-                name="password"
                 label="Password"
-                value={password}
                 type="password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                id="password"
               />
 
-              <p style={{ color: "red" }}>{error}</p>
+              <p style={{ color: "#ff4d4d", textAlign: "center", marginTop: "10px" }}>
+                {error}
+              </p>
 
               <Button
-                type="button"
+                className="authButton"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, height: '50px', fontSize: '1rem' }}
                 onClick={handleAuth}
+                disabled={loading} // Disable button while loading
               >
-                {formState === 0 ? "Login" : "Register"}
+                {/* SHOW SPINNER OR TEXT */}
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: "white" }} />
+                ) : (
+                  formState === 0 ? "LOGIN" : "REGISTER"
+                )}
               </Button>
+
             </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </DialogContent>
+      </Dialog>
 
-      <Snackbar open={open} autoHideDuration={4000} message={message} onClose={() => setOpen(false)} />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        message={message}
+        onClose={() => setSnackbarOpen(false)}
+      />
     </ThemeProvider>
   );
 }

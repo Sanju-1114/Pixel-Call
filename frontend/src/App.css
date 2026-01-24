@@ -242,35 +242,50 @@ body {
 }
 
 /* ========================================= */
-/* 6. AUTH PAGE FIXES (Black Text / Blue Button) */
+/* 6. AUTH PAGE FIXES (White Pill Label)     */
 /* ========================================= */
 
-/* Only affects inputs inside the Auth Form */
+/* 1. Input Box (Solid White) */
 .authInput .MuiInputBase-root {
-    color: black !important; /* Forces typing to be black */
-    background-color: white !important; /* White background */
+    background-color: #ffffff !important; 
+    border-radius: 4px;
+}
+.authInput .MuiInputBase-input {
+    color: #000000 !important; /* Text is Black */
 }
 
+/* 2. Label - Default State */
 .authInput .MuiInputLabel-root {
-    color: #555 !important; /* Dark Grey Label */
+    color: #555555 !important;
 }
 
+/* 3. Label - FLOATING (The Fix) */
+.authInput .MuiInputLabel-root.Mui-focused,
+.authInput .MuiInputLabel-root.MuiInputLabel-shrink {
+    color: #000000 !important; /* Blue Text */
+    font-weight: 700 !important; /* Bold */
+    
+    /* --- KEY FIX: Add a white background behind the text --- */
+    background-color: #fff5f5 !important; 
+    padding: 0 8px !important; /* Add breathing room around text */
+    margin-left: -4px; /* Center it slightly to cover the border */
+    border-radius: 4px; /* Soft edges */
+}
+
+/* 4. Borders */
 .authInput .MuiOutlinedInput-notchedOutline {
-    border-color: #ccc !important;
+    border-color: rgba(0,0,0,0.1) !important;
 }
-
 .authInput .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: #1976d2 !important; /* Blue border on hover */
+    border-color: #1976d2 !important;
 }
 
-/* BLUE BUTTON for Login/Register */
+/* 5. Button */
 .authButton {
-    background-color: #1976d2 !important; /* Standard Blue */
+    background-color: #1976d2 !important;
     color: white !important;
     font-weight: bold !important;
-}
-.authButton:hover {
-    background-color: #115293 !important; /* Darker Blue on Hover */
+    box-shadow: 0 4px 14px 0 rgba(25, 118, 210, 0.39) !important;
 }
 
 /* ========================================= */
