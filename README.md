@@ -65,12 +65,12 @@ The application utilizes **WebRTC** for peer-to-peer media streaming and **Socke
 Follow these steps to run the project locally.
 
 ### Prerequisites
-* [Node.js](https://nodejs.org/) (v14 or higher)
-* `npm` or `yarn`
+* `Node.js`
+* `npm`
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/Sanju-1114/Pixel-Call.git](https://github.com/Sanju-1114/Pixel-Call.git)
+git clone https://github.com/Sanju-1114/Pixel-Call.git
 cd Pixel-Call
 ```
 
@@ -88,7 +88,6 @@ Open a new terminal and navigate to the client directory:
 ```bash
 cd frontend
 npm install
-npm run start
 ```
 
 ### 4. Configuration (Crucial for Mobile/LAN testing)
@@ -132,6 +131,6 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 <div align="center">
 
-**Created by [Sanju](https://github.com/Sanju-1114)**
+**Created by [Sanjeev](https://github.com/Sanju-1114)**
 
 </div>
